@@ -5,7 +5,8 @@ const FormData = require('form-data');
 // const FILE = 'table_1.pdf'
 // const FILE = 'Year02.xls'
 // const FILE = 'Year02.xls'
-const FILE = 'table.pdf'
+// const FILE = 'table.pdf'
+const FILE = 'table_p1.pdf'
 
 async function uploadFile() {
     try {
