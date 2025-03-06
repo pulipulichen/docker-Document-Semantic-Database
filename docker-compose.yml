@@ -29,7 +29,9 @@ services:
       - "8080:8080"
     volumes:
       - ./cache/unstructured:/data  # 儲存處理過的文件
+      - ./cache/unstructured-uploads:/uploads  # 儲存處理過的文件
       - ./unstructured/app.py:/app/app.py
+      - ./unstructured/lib:/app/lib
 
   # mongodb:
   #   image: mongo:8.0.5

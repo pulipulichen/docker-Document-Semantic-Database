@@ -20,7 +20,8 @@
     "GitHub Action"
   ],
   "dependencies": {
-    "html-to-docx": "1.8.0",
-    "cache-manager-sqlite": "0.2.0"
+    "axios": "^1.8.1",
+    "cache-manager-sqlite": "0.2.0",
+    "html-to-docx": "1.8.0"
   }
 }
