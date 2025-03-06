@@ -5,3 +5,4 @@ unstructured==0.12.5
 pdfminer.six==20221105
 pdf2image
 markdownify
+paddleocr

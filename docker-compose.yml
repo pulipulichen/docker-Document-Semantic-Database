@@ -2,36 +2,42 @@
 version: "3"
 
 services:
-  # app:
-  #   build: .
-  #   # image: pudding/github-action-app:puppeteer-python-14-action-rss-20230826-1641
-  #   tty: true
-  #   env_file:
-  #     - .env
-  #   volumes: 
-  #     - ./app:/app/
-  #     - ./cache:/cache/
-  #     - ./package.json:/package.json
-
-  # chromadb:
-  #   image: chromadb/chroma:0.6.3
-  #   # ports:
-  #   #   - "8000:8000"  # 將 ChromaDB 開放的 8000 port 對映到宿主機
-  #   environment:
-  #     - IS_PERSISTENT=TRUE  # 啟用持久化存儲
-  #   volumes:
-  #     - ./cache/chroma:/chroma  # 將數據存儲到 volume，避免數據遺失
-
-  unstructured:
+  app:
     build: 
-      context: unstructured
-    ports:
-      - "8080:8080"
+      context: .
+      dockerfile: app/Dockerfile
+    # image: pudding/github-action-app:puppeteer-python-14-action-rss-20230826-1641
+    tty: true
+    env_file:
+      - .env
+    volumes: 
+      - ./app/index.js:/app/index.js
+      - ./app/lib:/app/lib
+      - ./package.json:/app/package.json
+      - ./cache:/cache/
+
+  chromadb:
+    image: ghcr.io/chroma-core/chroma
+    # tty: false
+    # stdin_open: false
+    # ports:
+    #   - "8000:8000"  # 將 ChromaDB 開放的 8000 port 對映到宿主機
+    # environment:
+    #   - IS_PERSISTENT=TRUE  # 啟用持久化存儲
+    #   - CHROMA_LOG_LEVEL=ERROR
     volumes:
-      - ./cache/unstructured:/data  # 儲存處理過的文件
-      - ./cache/unstructured-uploads:/uploads  # 儲存處理過的文件
-      - ./unstructured/app.py:/app/app.py
-      - ./unstructured/lib:/app/lib
+      - ./cache/chroma:/chroma/data  # 將數據存儲到 volume，避免數據遺失
+
+  # unstructured:
+  #   build: 
+  #     context: unstructured
+  #   ports:
+  #     - "8080:8080"
+  #   volumes:
+  #     - ./cache/unstructured:/data  # 儲存處理過的文件
+  #     - ./cache/unstructured-uploads:/uploads  # 儲存處理過的文件
+  #     - ./unstructured/app.py:/app/app.py
+  #     - ./unstructured/lib:/app/lib
 
   # mongodb:
   #   image: mongo:8.0.5

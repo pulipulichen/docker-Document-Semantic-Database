@@ -4,7 +4,7 @@
   "description": "docker-clip-crawler",
   "main": "index.js",
   "scripts": {
-    "start": "docker-compose down; docker-compose up",
+    "start": "docker-compose up",
     "up": "docker-compose up",
     "down": "docker-compose down",
     "build-up": "docker-compose up --build",

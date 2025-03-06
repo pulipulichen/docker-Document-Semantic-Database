@@ -2,6 +2,7 @@ from flask import Flask, request, jsonify
 from flask_cors import CORS
 import os
 from unstructured.partition.pdf import partition_pdf
+# from unstructured.partition.utils.ocr_models.paddle_ocr import OCRAgentPaddle
 # from unstructured.partition.text import partition_text
 from unstructured.partition.auto import partition
 from unstructured.chunking.title import chunk_by_title
@@ -14,6 +15,11 @@ from lib.html_table_to_markdown import html_table_to_markdown
 
 app = Flask(__name__)
 CORS(app)  # 允許跨域請求
+
+
+# 初始化 OCR 代理
+# ocr_agent = OCRAgentPaddle()
+# os.environ["OCR_AGENT"] = "unstructured.partition.utils.ocr_models.paddle_ocr.OCRAgentPaddle"
 
 UPLOAD_FOLDER = "/uploads"
 os.makedirs(UPLOAD_FOLDER, exist_ok=True)  # 確保資料夾存在
@@ -41,7 +47,10 @@ def process_file():
         if file.filename.endswith(".pdf"):
           elements = partition_pdf(filename=file_path, 
                               infer_table_structure=True,
-                              strategy='hi_res')
+                              strategy='auto',
+                            #   ocr_agent=ocr_agent,
+                              languages=["chi_tra", "eng", "chi_sim"],
+                              include_page_breaks=False)
           
         #   elements = partition_pdf(filename=file_path)
         
