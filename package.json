@@ -8,7 +8,7 @@
     "up": "docker-compose up",
     "down": "docker-compose down",
     "build-up": "docker-compose up --build",
-    "bash": "docker-compose run unstructured bash",
+    "bash": "docker-compose run app bash",
     "lang": "docker-compose run app python3 /app/python/lang.py FFWryY3_Pc0",
     "build": "docker-compose build"
   },

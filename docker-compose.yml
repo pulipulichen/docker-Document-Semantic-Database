@@ -8,25 +8,25 @@ services:
       dockerfile: app/Dockerfile
     # image: pudding/github-action-app:puppeteer-python-14-action-rss-20230826-1641
     tty: true
+    ports:
+      - "8000:8000"
     env_file:
       - .env
+    environment:
+      - TORCH_HOME=/data/models
+      - HF_HOME=/data/models
     volumes: 
-      - ./app/index.js:/app/index.js
+      - ./app/main.py:/app/main.py
       - ./app/lib:/app/lib
-      - ./package.json:/app/package.json
-      - ./cache:/cache/
+      - ./app/images:/app/images
+      # - ./package.json:/app/package.json
+      # - ./data/models:/data/models
+      - ./data/uploads:/data/uploads
 
   chromadb:
-    image: ghcr.io/chroma-core/chroma
-    # tty: false
-    # stdin_open: false
-    # ports:
-    #   - "8000:8000"  # 將 ChromaDB 開放的 8000 port 對映到宿主機
-    # environment:
-    #   - IS_PERSISTENT=TRUE  # 啟用持久化存儲
-    #   - CHROMA_LOG_LEVEL=ERROR
+    image: chromadb/chroma
     volumes:
-      - ./cache/chroma:/chroma/data  # 將數據存儲到 volume，避免數據遺失
+      - chromadb_data:/chroma/data
 
   # unstructured:
   #   build: 
@@ -34,8 +34,8 @@ services:
   #   ports:
   #     - "8080:8080"
   #   volumes:
-  #     - ./cache/unstructured:/data  # 儲存處理過的文件
-  #     - ./cache/unstructured-uploads:/uploads  # 儲存處理過的文件
+  #     - ./data/unstructured:/data  # 儲存處理過的文件
+  #     - ./data/unstructured-uploads:/uploads  # 儲存處理過的文件
   #     - ./unstructured/app.py:/app/app.py
   #     - ./unstructured/lib:/app/lib
 
@@ -46,3 +46,6 @@ services:
   #     - MONGO_INITDB_ROOT_PASSWORD=secret  # 修改為安全密碼
   #   volumes:
   #     - ./cache/mongo:/data/db
+
+volumes:
+  chromadb_data:
