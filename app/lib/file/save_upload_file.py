@@ -7,6 +7,9 @@ UPLOAD_FOLDER = "/tmp/uploads"
 os.makedirs(UPLOAD_FOLDER, exist_ok=True)  # 確保資料夾存在
 
 def save_upload_file(file):
+    if not file:
+        return None, None, None
+
     file_ext = os.path.splitext(file.filename)[1].lower()  # 取得副檔名
     random_filename = f"{uuid.uuid4().hex}{file_ext}"  # 產生隨機檔名
     file_path = os.path.join(UPLOAD_FOLDER, random_filename)
@@ -27,4 +30,4 @@ def save_upload_file(file):
     # print(os.path.getsize('/app/test/example.pdf'))
     
 
-    return file_ext, file_path
+    return file_ext, file_path, file.filename

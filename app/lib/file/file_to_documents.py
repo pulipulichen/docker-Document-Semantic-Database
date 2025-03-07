@@ -7,20 +7,20 @@ import os
 
 UNSTRUCTURED_API_URL = "http://unstructured:8080/process"
 
-async def file_to_documents(document, file):
+async def file_to_documents(document, file_path, chunk_config):
    documents = []
    if document:
       documents.append(document)
 
-   if file is None:
+   if file_path is None:
       return documents
 
 
    # ======================
 
-   file_ext, file_path = save_upload_file(file)
+   # file_ext, file_path = save_upload_file(file)
 
-   image_documents = process_image(file_path, file)
+   image_documents = process_image(file_path, chunk_config)
    if len(image_documents) > 0:
       documents = documents + image_documents
 
@@ -50,22 +50,24 @@ async def file_to_documents(document, file):
    # # 轉發檔案到 http://127.0.0.1:8000/process
    # response = requests.post(UNSTRUCTURED_API_URL, headers = {"accept": "application/json"}, files=files)
 
-   with open(file_path, "rb") as file:
-      files = {"file": file}
-      headers = {"accept": "application/json"}
-       
-      response = requests.post(UNSTRUCTURED_API_URL, headers=headers, files=files)
+   if len(image_documents) == 0:
+      with open(file_path, "rb") as file:
+         files = {"file": file}
+         data = {"chunk_config": chunk_config}
+         headers = {"accept": "application/json"}
+          
+         response = requests.post(UNSTRUCTURED_API_URL, headers=headers, files=files, data=data)
 
-   # print(response.json())
+      # print(response.json())
 
-   # 印出回應
-   if response.status_code == 200:
-      response_json = response.json()
-      if response_json['data']:
-         documents = documents + response_json['data']
-   else:
-      print(response)
-      # raise ValueError('Invalid response')
+      # 印出回應
+      if response.status_code == 200:
+         response_json = response.json()
+         if response_json['data']:
+            documents = documents + response_json['data']
+      else:
+         print(response)
+         # raise ValueError('Invalid response')
 
    os.remove(file_path)
    # ======================

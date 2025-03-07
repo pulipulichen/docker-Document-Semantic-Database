@@ -2,6 +2,8 @@ from google import genai, generativeai
 import os
 from PIL import Image
 
+import time
+
 client = genai.Client(api_key=os.getenv('GEMINI_API_KEY'))
 
 # 定义英文提示词
@@ -24,6 +26,9 @@ def encode_image(file_path):
     return {"mime_type": mime_type, "data": encoded_data}
 
 def vision_describe(image_path):
+
+  time.sleep(3)
+
 
   image = Image.open(image_path)
 

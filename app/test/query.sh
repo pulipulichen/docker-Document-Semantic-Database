@@ -24,4 +24,4 @@ curl -X 'POST' \
   'http://localhost:8000/query' \
   -H 'accept: application/json' \
   -H 'Content-Type: multipart/form-data' \
-  -F 'document=性感'
+  -F 'document=大同區'

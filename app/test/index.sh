@@ -24,4 +24,4 @@ curl -X 'POST' \
   'http://localhost:8000/index' \
   -H 'accept: application/json' \
   -H 'Content-Type: multipart/form-data' \
-  -F 'file=@miku.png'
+  -F 'file=@03.PNG'

@@ -22,6 +22,8 @@ services:
       - ./app/lib:/app/lib
       - ./app/test:/app/test
       - ./data/uploads:/data/uploads
+      - ./data/models:/data/models
+      - ./data/output_segments:/data/output_segments
 
   chromadb:
     image: chromadb/chroma
@@ -33,9 +35,11 @@ services:
       context: unstructured
     ports:
       - "8080:8080"
+    env_file:
+      - .env
     volumes:
       - ./data/unstructured:/data
-      - ./data/unstructured-uploads:/uploads
+      # - ./data/unstructured-uploads:/uploads
       - ./unstructured/app.py:/app/app.py
       - ./unstructured/lib:/app/lib
 

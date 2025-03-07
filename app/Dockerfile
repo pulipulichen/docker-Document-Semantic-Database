@@ -14,9 +14,15 @@ RUN pip install fastapi uvicorn
 RUN pip install Pillow
 RUN pip install -q -U google-genai
 RUN pip install python-multipart
+RUN pip install opencv-python torch torchvision numpy tqdm requests
+RUN pip install git+https://github.com/facebookresearch/segment-anything.git
+
+RUN apt update
+RUN apt install -y libgl1-mesa-glx
+
 
 # 複製應用程式程式碼
-COPY app /app
+# COPY app /app
 
 # 啟動 FastAPI 伺服器
 CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8000", "--reload"]

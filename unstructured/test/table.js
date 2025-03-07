@@ -8,7 +8,11 @@ const FormData = require('form-data');
 // const FILE = 'table.pdf'
 // const FILE = 'table_p1.pdf'
 // const FILE = 'table_p2_p3.pdf'
-const FILE = 'example.pdf'
+// const FILE = 'example.pdf'
+// const FILE = '03.PNG'
+// const FILE = 'red_dream.txt'
+// const FILE = 'night.txt'
+const FILE = 'slide.pptx'
 
 async function uploadFile() {
     try {
@@ -26,10 +30,10 @@ async function uploadFile() {
         // 解析回應
         if (response.data && response.data.data && Array.isArray(response.data.data)) {
             response.data.data.forEach((item, index) => {
-                console.log(item)
+//                 console.log(item)
                 const filename = `result${index + 1}.md`;
                 fs.writeFileSync(filename, item, 'utf8');
-                console.log(`Saved: ${filename}`);
+                console.log(`Saved: ${filename}`, item.slice(0, 50));
             });
         } else {
             console.error('Unexpected response format:', response.data);
