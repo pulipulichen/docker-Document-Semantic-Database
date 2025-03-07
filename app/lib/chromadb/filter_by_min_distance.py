@@ -1,6 +1,6 @@
 import json
 
-def filter_by_min_distance(data):
+def filter_by_min_distance(data, max_results):
     documents = data["documents"][0]  # Extract documents
     metadatas = data["metadatas"][0]  # Extract metadatas
     distances = data["distances"][0]  # Extract distances
@@ -24,7 +24,7 @@ def filter_by_min_distance(data):
     filtered_distances = [dist for i, dist in enumerate(distances) if i in min_indices]
 
     return {
-        "documents": [filtered_documents],
-        "metadatas": [filtered_metadatas],
-        "distances": [filtered_distances]
+        "documents": filtered_documents[:max_results],
+        "metadatas": filtered_metadatas[:max_results],
+        "distances": filtered_distances[:max_results]
     }

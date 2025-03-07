@@ -7,7 +7,7 @@ import os
 
 UNSTRUCTURED_API_URL = "http://unstructured:8080/process"
 
-async def file_to_documents(document, file_path, chunk_config):
+async def file_to_documents(document, file_path, index_config):
    documents = []
    if document:
       documents.append(document)
@@ -20,7 +20,7 @@ async def file_to_documents(document, file_path, chunk_config):
 
    # file_ext, file_path = save_upload_file(file)
 
-   image_documents = process_image(file_path, chunk_config)
+   image_documents = process_image(file_path, index_config)
    if len(image_documents) > 0:
       documents = documents + image_documents
 
@@ -53,7 +53,7 @@ async def file_to_documents(document, file_path, chunk_config):
    if len(image_documents) == 0:
       with open(file_path, "rb") as file:
          files = {"file": file}
-         data = {"chunk_config": chunk_config}
+         data = {"chunk_config": index_config}
          headers = {"accept": "application/json"}
           
          response = requests.post(UNSTRUCTURED_API_URL, headers=headers, files=files, data=data)

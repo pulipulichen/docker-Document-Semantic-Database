@@ -9,11 +9,12 @@ import shutil
 
 from lib.image.sam.init_sam import init_sam
 from lib.image.sam.load_image import load_image
+from lib.image.sam.save_segments import save_segments
 
 # 設定模型
 OUTPUT_DIR = "/data/output_segments"
 
-def process_image(file_path, chunk_config = None):
+def process_image(file_path, index_config = {}):
   documents = []
   image_file = is_image(file_path)
   
@@ -23,8 +24,8 @@ def process_image(file_path, chunk_config = None):
     documents.append(document)
 
   IMAGE_SEGMENT_SIZE_THRESHOLD = int(os.getenv('SAM_IMAGE_SEGMENT_SIZE_THRESHOLD', 1024))
-  if chunk_config and 'SAM_IMAGE_SEGMENT_SIZE_THRESHOLD' in chunk_config:
-      IMAGE_SEGMENT_SIZE_THRESHOLD = int(chunk_config['SAM_IMAGE_SEGMENT_SIZE_THRESHOLD'])
+  if index_config and 'SAM_IMAGE_SEGMENT_SIZE_THRESHOLD' in index_config:
+      IMAGE_SEGMENT_SIZE_THRESHOLD = int(index_config['SAM_IMAGE_SEGMENT_SIZE_THRESHOLD'])
 
   image = load_image(file_path)
   if image.shape[0] > IMAGE_SEGMENT_SIZE_THRESHOLD or image.shape[1] > IMAGE_SEGMENT_SIZE_THRESHOLD:

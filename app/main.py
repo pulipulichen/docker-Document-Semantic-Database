@@ -24,7 +24,7 @@ async def index(
         metadata: Optional[str] = Form(None),
         file: Optional[UploadFile] = File(None),
         document: Optional[str] = Form(None),
-        chunk_config: Optional[str] = Form(None),       
+        index_config: Optional[str] = Form(None),       
     ):
 
     file_ext, file_path, filename = save_upload_file(file)
@@ -36,7 +36,7 @@ async def index(
         file_path,
         filename,
         document,
-        chunk_config
+        index_config
     ))  # 讓 process_index() 在背景執行
 
     return True
@@ -48,13 +48,19 @@ async def query(
         metadata: Optional[str] = Form(None),
         file: Optional[UploadFile] = File(None),
         document: Optional[str] = Form(None),
-        max_results: Optional[int] = Form(10)
+        index_config: Optional[str] = Form(None),
+        query_config: Optional[str] = Form(None)
     ):
 
     file_ext, file_path, filename = save_upload_file(file)
 
     metadata = parse_json(metadata)
-    documents = await file_to_documents(document, file_path)
+
+    index_config = parse_json(index_config)
+    query_config = parse_json(query_config)
+
+    # print(query_config)
+    documents = await file_to_documents(document, file_path, index_config)
 
     # =================================================================
 
@@ -70,7 +76,7 @@ async def query(
         collection_name,
         embeddings,
         metadata,
-        max_results
+        query_config
     )
 
     # =================================================================

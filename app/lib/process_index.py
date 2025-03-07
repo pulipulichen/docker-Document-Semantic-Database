@@ -13,15 +13,15 @@ async def process_index(
         file_path,
         filename,
         document,
-        chunk_config
+        index_config
 ):
 
 
-    chunk_config = parse_json(chunk_config)
+    index_config = parse_json(index_config)
 
     # ======================
 
-    documents = await file_to_documents(document, file_path, chunk_config)
+    documents = await file_to_documents(document, file_path, index_config)
     item_id = file_to_item_id(item_id, filename)
 
     # =================================================================
