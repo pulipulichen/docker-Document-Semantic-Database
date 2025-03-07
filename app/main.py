@@ -4,12 +4,12 @@ from typing import Optional
 from lib.embedding.text_to_embedding import text_to_embedding
 
 from lib.embedding.parse_matadata import parse_matadata
-from lib.embedding.file_to_document import file_to_document
+from lib.file.file_to_documents import file_to_documents
 
 from lib.chromadb.chromadb_index import chromadb_index
 from lib.chromadb.chromadb_query import chromadb_query
 
-from lib.file_to_item_id import file_to_item_id
+from lib.file.file_to_item_id import file_to_item_id
 
 app = FastAPI()
 
@@ -22,25 +22,16 @@ async def index(
         document: Optional[str] = Form(None)        
     ):
 
-    
-
     # ======================
 
-    document = file_to_document(document, file)
+    documents = file_to_documents(document, file)
     item_id = file_to_item_id(item_id, file)
 
     # =================================================================
 
     embeddings = []
-    ids=[]
-    documents = []
-    if document:
-        # if document is string, then put it in an array
-        if isinstance(document, str):
-            documents = [document]
-        else:
-            documents = document
-
+    ids = []
+    if documents and len(documents) > 0:
         # convert each document to embedding
         for index, doc in enumerate(documents):
             embeddings.append(text_to_embedding(doc))
@@ -89,25 +80,13 @@ async def query(
         max_results: Optional[int] = Form(10)
     ):
 
-    embedding = []
-
     metadata = parse_matadata(metadata)
-    document = file_to_document(document, file)
+    documents = file_to_documents(document, file)
 
     # =================================================================
 
-    if document and len(embedding) == 0:
-        embedding = text_to_embedding(document)
-    
     embeddings = []
-    documents = []
-    if document:
-        # if document is string, then put it in an array
-        if isinstance(document, str):
-            documents = [document]
-        else:
-            documents = document
-
+    if documents and len(documents) > 0:
         # convert each document to embedding
         for doc in documents:
             embeddings.append(text_to_embedding(doc))
@@ -122,14 +101,5 @@ async def query(
     )
 
     # =================================================================
-
-    # return {
-    #     # "filename": file.filename, 
-    #     # "embedding": embedding, 
-    #     "document": document,
-    #     "parsed_metadata": metadata,
-    #     "collection_name": collection_name,
-    #     "item_id": item_id
-    # }
 
     return results

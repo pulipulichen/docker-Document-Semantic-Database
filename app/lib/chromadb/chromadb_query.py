@@ -10,6 +10,9 @@ def chromadb_query(
     metadata,
     max_results
 ):
+  if len(embeddings) == 0:
+    return False
+  
   global client
   if client is None:
     client = chromadb.HttpClient(host='chromadb', port=8000)

@@ -11,6 +11,8 @@ RUN pip install paddlepaddle
 RUN pip install unstructured_paddleocr
 RUN pip install hanzidentifier
 RUN pip install opencc-python-reimplemented
+RUN pip install fastapi uvicorn starlette
 
+CMD ["uvicorn", "app:app", "--host", "0.0.0.0", "--port", "8080", "--reload"]
 
 COPY app.py /app/app.py

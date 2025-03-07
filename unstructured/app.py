@@ -1,89 +1,79 @@
-from flask import Flask, request, jsonify
-from flask_cors import CORS
+from fastapi import FastAPI, File, UploadFile, HTTPException
+from fastapi.middleware.cors import CORSMiddleware
 import os
-from unstructured.partition.pdf import partition_pdf
-# from unstructured.partition.utils.ocr_models.paddle_ocr import OCRAgentPaddle
-# from unstructured.partition.text import partition_text
+import uvicorn
+from starlette.responses import JSONResponse
+
 from unstructured.partition.auto import partition
-from unstructured.chunking.title import chunk_by_title
-from unstructured.partition.xlsx import partition_xlsx
-
-# from unstructured.chunking.utils import chunk_table
-
-import json
-from lib.html_table_to_markdown import html_table_to_markdown
-
-app = Flask(__name__)
-CORS(app)  # 允許跨域請求
-
-
-# 初始化 OCR 代理
-# ocr_agent = OCRAgentPaddle()
-# os.environ["OCR_AGENT"] = "unstructured.partition.utils.ocr_models.paddle_ocr.OCRAgentPaddle"
-
-UPLOAD_FOLDER = "/uploads"
-os.makedirs(UPLOAD_FOLDER, exist_ok=True)  # 確保資料夾存在
+from unstructured.partition.pdf import partition_pdf
+from unstructured.partition.ppt import partition_ppt
+from unstructured.partition.pptx import partition_pptx
+from unstructured.partition.rtf import partition_rtf
+from unstructured.partition.doc import partition_doc
+from unstructured.partition.docx import partition_docx
 
 from lib.elements_to_markdown import elements_to_markdown
 
-@app.route("/process", methods=["POST"])
-def process_file():
-    if "file" not in request.files:
-        return jsonify({"error": "No file uploaded"}), 400
-    
-    file = request.files["file"]
-    file_path = os.path.join(UPLOAD_FOLDER, file.filename)
-    file.save(file_path)
+from lib.save_upload_file import save_upload_file
 
-    try:
-        # if file.filename.endswith(".pdf"):
-        #     elements = partition_pdf(filename=file_path)
-        # elif file.filename.endswith(".txt"):
-        #     elements = partition_text(filename=file_path)
-        # else:
-        #     return jsonify({"error": "Unsupported file type"}), 400
-        # print('okok')
-        
-        if file.filename.endswith(".pdf"):
-          elements = partition_pdf(filename=file_path, 
-                              infer_table_structure=True,
-                              strategy='auto',
-                            #   ocr_agent=ocr_agent,
-                              languages=["chi_tra", "eng", "chi_sim"],
-                              include_page_breaks=False)
-          
-        #   elements = partition_pdf(filename=file_path)
-        
-        #   elements = partition_pdf(filename=file_path, 
-        #                       infer_table_structure=True)
-          
-        #   elements = chunk_by_title(elements)
-        elif file.filename.endswith(".xls"):
-          elements = partition_xlsx(filename=file_path)
-          
-        else:
-          elements = partition(filename=file_path)
-          elements = chunk_by_title(elements)
+# 初始化 FastAPI
+app = FastAPI()
 
-        # print(len(elements))
-        
-        # prin/t(len(chunks))
-        # for chunk in chunks:
-        #   print(chunk)
-        #   print("\n\n" + "-"*80)
+# 允許跨域請求 (CORS)
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],  # 允許所有來源
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
-        markdown_result = elements_to_markdown(elements)
-        # print(markdown_result)
-        # return jsonify({"status": "success", "data": markdown_result})
-        # ✅ 用 json.dumps() 禁用 Unicode 轉義
-        return app.response_class(
-            response=json.dumps({"status": "success", "data": markdown_result}, ensure_ascii=False),
-            mimetype="application/json"
+@app.post("/process")
+async def process_file(file: UploadFile = File(...)):
+    file_ext, file_path = save_upload_file(file)
+
+    # https://docs.unstructured.io/open-source/core-functionality/partitioning#partition
+
+    # 根據副檔名決定 partition 方法
+    if file_ext in [".pdf"]:
+        elements = partition_pdf(
+            filename=file_path,
+            infer_table_structure=True,
+            strategy="auto",
+            languages=["chi_tra", "eng", "chi_sim"],
+            include_page_breaks=False,
         )
+    elif file_ext in [".ppt"]:
+        elements = partition_ppt(
+            include_page_breaks=False,
+        )
+    elif file_ext in [".pptx"]:
+        elements = partition_pptx(
+            include_page_breaks=False,
+        )
+    elif file_ext in [".rtf"]:
+        elements = partition_rtf(
+            include_page_breaks=False,
+        )
+    elif file_ext in [".doc"]:
+        elements = partition_doc(
+            include_page_breaks=False,
+        )
+    elif file_ext in [".docx"]:
+        elements = partition_docx(
+            include_page_breaks=False,
+        )
+    else:
+        elements = partition(filename=file_path)
 
-    except Exception as e:
-        return jsonify({"error": str(e)}), 500
+    markdown_result = elements_to_markdown(elements)
+
+    # 刪除上傳的檔案
+    os.remove(file_path)
+
+    # 返回 JSON 資料
+    return JSONResponse(content={"status": "success", "data": markdown_result})
+
 
 if __name__ == "__main__":
-    # print("中文能夠顯示嗎？")
-    app.run(host="0.0.0.0", port=8080, debug=True)
+    uvicorn.run(app, host="0.0.0.0", port=8080)
