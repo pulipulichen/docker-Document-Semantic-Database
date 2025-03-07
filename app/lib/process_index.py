@@ -7,7 +7,7 @@ from lib.embedding.parse_json import parse_json
 from lib.embedding.text_to_embedding import text_to_embedding
 
 async def process_index(
-        collection_name,
+        knowledge_id,
         item_id,
         metadata,
         file_path,
@@ -41,7 +41,7 @@ async def process_index(
     metadata = parse_json(metadata, item_id)
 
     chromadb_index(
-        collection_name,
+        knowledge_id,
         ids,
         embeddings,
         documents,
@@ -60,10 +60,10 @@ async def process_index(
     #     "item_id": item_id
     # }
 
-    return {
+    print({
         "status": "success",
-        "collection": collection_name,
+        "knowledge_id": knowledge_id,
         "item_id": item_id,
         "ids": ids,
         "metadata": metadata
-    }
+    })

@@ -1,9 +1,12 @@
-import chromadb
+
 from lib.chromadb.convert_metadata_to_where import convert_metadata_to_where
-from lib.chromadb.filter_by_min_distance import filter_by_min_distance
+from lib.chromadb.filter_by_max_distance import filter_by_max_distance
+from lib.chromadb.get_collection import get_collection
 import os
 
-client = None
+from lib.chromadb.external_knowledge_response import external_knowledge_response
+
+
 
 def chromadb_query(
     collection_name,
@@ -27,6 +30,10 @@ def chromadb_query(
   if 'item_distinct' in query_config:
     item_distinct = bool(query_config['item_distinct'])
 
+  score_threshold = float(os.getenv('CHROMADB_QUERY_SCORE_THRESHOLD', True))
+  if 'score_threshold' in query_config:
+    score_threshold = float(query_config['score_threshold'])
+
   # =================================================================
   
   n_results = result_width
@@ -34,13 +41,10 @@ def chromadb_query(
     n_results = max_results
 
   # =================================================================
-  global client
-  if client is None:
-    client = chromadb.HttpClient(host='chromadb', port=8000)
+ 
+  collection = get_collection(collection_name)
 
-  collection = client.get_or_create_collection(name=collection_name)
-
-  results = collection.query(
+  chromadb_results = collection.query(
     query_embeddings=embeddings,
     where=convert_metadata_to_where(metadata),
     n_results=n_results
@@ -48,13 +52,15 @@ def chromadb_query(
 
   # print(item_distinct)
 
+
   if item_distinct is False:
-    return {
-      "documents": results["documents"][0],
-      "metadatas": results["metadatas"][0],
-      "distances": results["distances"][0],
+    formated_results = {
+      "documents": chromadb_results["documents"][0],
+      "metadatas": chromadb_results["metadatas"][0],
+      "distances": chromadb_results["distances"][0],
     }
   else:
-    return filter_by_min_distance(results, max_results)
+    formated_results = filter_by_max_distance(chromadb_results, max_results)
 
   # print(collection.count())
+  return external_knowledge_response(formated_results, score_threshold)

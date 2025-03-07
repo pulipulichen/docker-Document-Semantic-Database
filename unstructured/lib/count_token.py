@@ -1,6 +1,7 @@
 import tiktoken
+import os
 
-token_encoder = tiktoken.encoding_for_model('gpt-4o-mini')
+token_encoder = tiktoken.encoding_for_model(os.getenv('UNSTRUCTED_TOKEN_ENCODER_MODEL', 'gpt-4o-mini'))
 
 def count_token(text):
   if isinstance(text, list):

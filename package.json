@@ -7,6 +7,7 @@
     "start": "docker-compose up",
     "up": "docker-compose up",
     "down": "docker-compose down",
+    "down-rm-volume": "docker-compose down -v",
     "build-up": "docker-compose up --build",
     "bash": "docker-compose run app bash",
     "lang": "docker-compose run app python3 /app/python/lang.py FFWryY3_Pc0",

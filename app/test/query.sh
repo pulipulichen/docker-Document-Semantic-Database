@@ -24,5 +24,5 @@ curl -X 'POST' \
   'http://localhost:8000/query' \
   -H 'accept: application/json' \
   -H 'Content-Type: multipart/form-data' \
-  -F 'document=大同區' \
+  -F 'document=初音' \
   -F 'query_config={"item_distinct":false}'

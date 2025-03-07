@@ -11,11 +11,11 @@ from unstructured.partition.image import partition_image
 
 def file_path_to_elements(file_ext, file_path, chunk_config):
 
-    languages = os.getenv('UNSTRUCTED_OCR_LANGUAGES', "chi_tra,eng,chi_sim")
-    if 'UNSTRUCTED_OCR_LANGUAGES' in chunk_config:
-        languages = chunk_config['UNSTRUCTED_OCR_LANGUAGES']
+    ocr_languages = os.getenv('UNSTRUCTED_OCR_LANGUAGES', "chi_tra,eng,chi_sim")
+    if 'ocr_languages' in chunk_config:
+        ocr_languages = chunk_config['ocr_languages']
     # split languages by commas
-    languages = languages.split(',')
+    ocr_languages = ocr_languages.split(',')
 
     # =================================================================
 
@@ -29,7 +29,7 @@ def file_path_to_elements(file_ext, file_path, chunk_config):
             filename=file_path,
             infer_table_structure=True,
             strategy="auto",
-            languages=languages,
+            languages=ocr_languages,
             include_page_breaks=False,
         )
     elif file_ext in [".ppt"]:
@@ -61,7 +61,7 @@ def file_path_to_elements(file_ext, file_path, chunk_config):
         elements = partition_image(
             filename=file_path,
             strategy="auto",
-            languages=languages,
+            languages=ocr_languages,
             infer_table_structure=True,
         )
     else:

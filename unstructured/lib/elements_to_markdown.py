@@ -18,9 +18,17 @@ def elements_to_markdown(file_ext, elements, chunk_config):
     """將 Unstructured 解析的元素轉換為 Markdown 格式"""
     # markdown_chunks = []
 
+    # =================================================================
+
     chunk_token_length = int(os.getenv('UNSTRUCTED_CHUNK_TOKEN_LENGTH', 500))
-    if 'UNSTRUCTED_CHUNK_TOKEN_LENGTH' in chunk_config:
-        chunk_token_length = int(chunk_config['UNSTRUCTED_CHUNK_TOKEN_LENGTH'])
+    if 'chunk_token_length' in chunk_config:
+        chunk_token_length = int(chunk_config['chunk_token_length'])
+
+    chunk_rows_per_table = int(os.getenv('UNSTRUCTED_CHUNK_ROWS_PER_TABLE', 30))
+    if 'chunk_rows_per_table' in chunk_config:
+        chunk_rows_per_table = int(chunk_config['chunk_rows_per_table'])
+
+    # =================================================================
 
     sections = []
 
@@ -108,7 +116,7 @@ def elements_to_markdown(file_ext, elements, chunk_config):
             # enable_convert = False
 
             if enable_convert:
-                tables = split_html_table(table)
+                tables = split_html_table(table, chunk_rows_per_table)
             else:
                 tables = [table]
             

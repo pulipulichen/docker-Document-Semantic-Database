@@ -19,7 +19,7 @@ import asyncio
 app = FastAPI()
 @app.post("/index")
 async def index(
-        collection_name: str = Form('knowledge_base',),
+        knowledge_id: str = Form('knowledge_base'),
         item_id: Optional[str] = Form(None),
         metadata: Optional[str] = Form(None),
         file: Optional[UploadFile] = File(None),
@@ -30,7 +30,7 @@ async def index(
     file_ext, file_path, filename = save_upload_file(file)
     
     asyncio.create_task(process_index(
-        collection_name,
+        knowledge_id,
         item_id,
         metadata,
         file_path,
@@ -44,12 +44,14 @@ async def index(
 
 @app.post("/query")
 async def query(
-        collection_name: str = Form('knowledge_base',),
+        knowledge_id: str = Form('knowledge_base'),
         metadata: Optional[str] = Form(None),
         file: Optional[UploadFile] = File(None),
         document: Optional[str] = Form(None),
+        query: Optional[str] = Form(None),
         index_config: Optional[str] = Form(None),
-        query_config: Optional[str] = Form(None)
+        query_config: Optional[str] = Form(None),
+        retrieval_setting: Optional[str] = Form(None)
     ):
 
     file_ext, file_path, filename = save_upload_file(file)
@@ -58,6 +60,15 @@ async def query(
 
     index_config = parse_json(index_config)
     query_config = parse_json(query_config)
+    retrieval_setting = parse_json(retrieval_setting)
+
+    query_config.update(retrieval_setting)
+
+    if query is not None:
+        if document is None:
+            document = query
+        else:
+            document = document + query
 
     # print(query_config)
     documents = await file_to_documents(document, file_path, index_config)
@@ -73,7 +84,7 @@ async def query(
     # =================================================================
 
     results = chromadb_query(
-        collection_name,
+        knowledge_id,
         embeddings,
         metadata,
         query_config

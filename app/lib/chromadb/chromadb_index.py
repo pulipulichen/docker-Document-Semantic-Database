@@ -1,7 +1,4 @@
-import chromadb
-
-client = None
-
+from lib.chromadb.get_collection import get_collection
 
 def chromadb_index(
     collection_name,
@@ -13,11 +10,7 @@ def chromadb_index(
   if len(embeddings) == 0:
     return False
 
-  global client
-  if client is None:
-    client = chromadb.HttpClient(host='chromadb', port=8000)
-
-  collection = client.get_or_create_collection(name=collection_name)
+  collection = get_collection(collection_name)
 
   collection.upsert(
     documents=documents,
