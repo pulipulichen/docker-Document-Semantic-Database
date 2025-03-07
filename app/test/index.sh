@@ -21,7 +21,7 @@
 #   -F 'file=@02.webp'
 
 curl -X 'POST' \
-  'http://localhost:8000/index/' \
+  'http://localhost:8000/index' \
   -H 'accept: application/json' \
   -H 'Content-Type: multipart/form-data' \
-  -F 'file=@example.pdf'
+  -F 'file=@miku.png'

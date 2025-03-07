@@ -1,8 +1,9 @@
 import os
 import uuid
+import shutil
 
 # 設定上傳資料夾
-UPLOAD_FOLDER = "/tmp"
+UPLOAD_FOLDER = "/tmp/uploads"
 os.makedirs(UPLOAD_FOLDER, exist_ok=True)  # 確保資料夾存在
 
 def save_upload_file(file):
@@ -15,13 +16,15 @@ def save_upload_file(file):
 
     # 存檔
     with open(file_path, "wb") as buffer:
-        while chunk := file.file.read(4096):
-            buffer.write(chunk)
+        shutil.copyfileobj(file.file, buffer)
         # buffer.write(file.file.read())  # 直接讀取檔案內容步的檔案內容
 
     # print(file_path)
     # print(file.filename)
     # print(file.content_type)
+    # print(file.size)
     # print(os.path.getsize(file_path))
+    # print(os.path.getsize('/app/test/example.pdf'))
+    
 
     return file_ext, file_path

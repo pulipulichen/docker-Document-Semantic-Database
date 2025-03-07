@@ -12,8 +12,9 @@ from lib.chromadb.chromadb_query import chromadb_query
 from lib.file.file_to_item_id import file_to_item_id
 
 app = FastAPI()
-
-@app.post("/index/")
+import shutil
+import os
+@app.post("/index")
 async def index(
         collection_name: str = Form('knowledge_base',),
         item_id: Optional[str] = Form(None),
@@ -24,7 +25,7 @@ async def index(
 
     # ======================
 
-    documents = file_to_documents(document, file)
+    documents = await file_to_documents(document, file)
     item_id = file_to_item_id(item_id, file)
 
     # =================================================================
@@ -71,7 +72,7 @@ async def index(
     }
 
 
-@app.post("/query/")
+@app.post("/query")
 async def query(
         collection_name: str = Form('knowledge_base',),
         metadata: Optional[str] = Form(None),
@@ -81,7 +82,7 @@ async def query(
     ):
 
     metadata = parse_matadata(metadata)
-    documents = file_to_documents(document, file)
+    documents = await file_to_documents(document, file)
 
     # =================================================================
 

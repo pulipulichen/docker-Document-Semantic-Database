@@ -1,11 +1,13 @@
-from lib.embedding.is_image import is_image
-from lib.embedding.vision_describe import vision_describe
+
+from lib.file.save_upload_file import save_upload_file
+from lib.image.process_image import process_image
 
 import requests
+import os
 
 UNSTRUCTURED_API_URL = "http://unstructured:8080/process"
 
-def file_to_documents(document, file):
+async def file_to_documents(document, file):
    documents = []
    if document:
       documents.append(document)
@@ -13,18 +15,46 @@ def file_to_documents(document, file):
    if file is None:
       return documents
 
-   # ======================
-
-   image_file = is_image(file)
-  
-   if image_file is not False:
-      documents.append(vision_describe(image_file))
-      return documents
 
    # ======================
 
-   files = {'file': (file.filename, file.file.read(), file.content_type)}
-   response = requests.post(UNSTRUCTURED_API_URL, files=files)
+   file_ext, file_path = save_upload_file(file)
+
+   image_documents = process_image(file_path, file)
+   if len(image_documents) > 0:
+      documents = documents + image_documents
+
+   # ======================
+
+   # ======================
+
+   # file_ext, file_path = save_upload_file(file)
+
+   # print(file.size)
+   # print(file_path)
+   # # 以 'rb' 模式打開檔案，確保是二進位格式
+   # with open(file_path, "rb") as f:
+   #     files = {"file": (file_path, f, "application/pdf")}  # 指定 MIME 類型
+
+   #     # 發送 POST 請求
+   #     response = requests.post(UNSTRUCTURED_API_URL, files=files)
+
+   # 讀取檔案內容
+   # file_content = await file.read()
+
+   # 構造 requests 的 files 參數
+   # files = {
+   #     "file": (file.filename, open('/app/test/example.pdf'), file.content_type)
+   # }
+
+   # # 轉發檔案到 http://127.0.0.1:8000/process
+   # response = requests.post(UNSTRUCTURED_API_URL, headers = {"accept": "application/json"}, files=files)
+
+   with open(file_path, "rb") as file:
+      files = {"file": file}
+      headers = {"accept": "application/json"}
+       
+      response = requests.post(UNSTRUCTURED_API_URL, headers=headers, files=files)
 
    # print(response.json())
 
@@ -35,8 +65,9 @@ def file_to_documents(document, file):
          documents = documents + response_json['data']
    else:
       print(response)
-      raise ValueError('Invalid response')
+      # raise ValueError('Invalid response')
 
+   os.remove(file_path)
    # ======================
 
    return documents

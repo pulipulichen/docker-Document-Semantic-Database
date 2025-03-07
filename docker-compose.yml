@@ -20,7 +20,7 @@ services:
     volumes: 
       - ./app/main.py:/app/main.py
       - ./app/lib:/app/lib
-      - ./app/images:/app/images
+      - ./app/test:/app/test
       - ./data/uploads:/data/uploads
 
   chromadb:

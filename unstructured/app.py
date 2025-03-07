@@ -36,6 +36,10 @@ async def process_file(file: UploadFile = File(...)):
 
     # 根據副檔名決定 partition 方法
     if file_ext in [".pdf"]:
+        # print('會出錯嗎？')
+        # print(file_path)
+        # print(type(file_path))
+        # print('================================================================')
         elements = partition_pdf(
             filename=file_path,
             infer_table_structure=True,

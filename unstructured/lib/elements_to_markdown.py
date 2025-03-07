@@ -53,8 +53,8 @@ def elements_to_markdown(elements):
 
             table = element.metadata.text_as_html
             
-            # enable_convert = True
-            enable_convert = False
+            enable_convert = True
+            # enable_convert = False
 
             if enable_convert:
                 tables = split_html_table(table)

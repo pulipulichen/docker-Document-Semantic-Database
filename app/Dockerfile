@@ -20,4 +20,4 @@ COPY app /app
 
 # 啟動 FastAPI 伺服器
 CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8000", "--reload"]
-# CMD ["python3", "/app/main.py"]
+# CMD ["python3", "/app/test/test.py"]
