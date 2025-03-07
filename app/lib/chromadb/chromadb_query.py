@@ -29,6 +29,7 @@ def chromadb_query(
   item_distinct = bool(os.getenv('CHROMADB_QUERY_ITEM_DISTINCT', True))
   if 'item_distinct' in query_config:
     item_distinct = bool(query_config['item_distinct'])
+  item_distinct = False
 
   score_threshold = float(os.getenv('CHROMADB_QUERY_SCORE_THRESHOLD', True))
   if 'score_threshold' in query_config:
@@ -50,6 +51,7 @@ def chromadb_query(
     n_results=n_results
   )
 
+  # print(chromadb_results)
   # print(item_distinct)
 
 

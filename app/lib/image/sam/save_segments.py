@@ -8,9 +8,9 @@ def save_segments(image, masks, output_dir, chunk_config=None):
     os.makedirs(output_dir, exist_ok=True)
     image_list = []
 
-    MIN_SEGMENT_RATIO = int(os.getenv('SAM_MIN_SEGMENT_RATIO', 0.05))
+    MIN_SEGMENT_RATIO = float(os.getenv('SAM_MIN_SEGMENT_RATIO', 0.05))
     if chunk_config and 'SAM_MIN_SEGMENT_RATIO' in chunk_config:
-        MIN_SEGMENT_RATIO = int(chunk_config['SAM_MIN_SEGMENT_RATIO'])
+        MIN_SEGMENT_RATIO = float(chunk_config['SAM_MIN_SEGMENT_RATIO'])
 
     img_h, img_w, _ = image.shape  # 取得原圖大小
     min_area = img_h * img_w * MIN_SEGMENT_RATIO  # 計算最小可接受面積

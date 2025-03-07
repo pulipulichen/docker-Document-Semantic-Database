@@ -1,10 +1,9 @@
 
-
 def external_knowledge_response(results, score_threshold = 0):
   records = []
 
   for i, content in enumerate(results['documents']):
-    score = results['distances'][i]
+    score = (2 - results['distances'][i]) / 2
     if score_threshold > 0 and score < score_threshold:
       break
 

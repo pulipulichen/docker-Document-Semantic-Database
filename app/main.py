@@ -1,16 +1,10 @@
-from fastapi import FastAPI, UploadFile, File, Form
+from fastapi import FastAPI, UploadFile, File, Form, Request
 from typing import Optional
 
-from lib.embedding.text_to_embedding import text_to_embedding
-
-from lib.embedding.parse_json import parse_json
-from lib.file.file_to_documents import file_to_documents
-
-
-from lib.chromadb.chromadb_query import chromadb_query
-from lib.chromadb.chromadb_query import chromadb_query
+from lib.chromadb.chromadb_ready import chromadb_ready
 
 from lib.process_index import process_index
+from lib.process_query import process_query
 
 from lib.file.save_upload_file import save_upload_file
 
@@ -21,11 +15,27 @@ app = FastAPI()
 async def index(
         knowledge_id: str = Form('knowledge_base'),
         item_id: Optional[str] = Form(None),
+        title: Optional[str] = Form(None),
         metadata: Optional[str] = Form(None),
         file: Optional[UploadFile] = File(None),
+        content: Optional[str] = Form(None),
         document: Optional[str] = Form(None),
         index_config: Optional[str] = Form(None),       
     ):
+
+    # =================================================================
+    # Adapted for External Knowledge API https://docs.dify.ai/guides/knowledge-base/external-knowledge-api-documentation
+
+    if title is not None and item_id is None:
+        item_id = title
+
+    if content is not None:
+        if document is None:
+            document = content
+        else:
+            document = document + content
+
+    # =================================================================
 
     file_ext, file_path, filename = save_upload_file(file)
     
@@ -43,53 +53,38 @@ async def index(
 
 
 @app.post("/query")
+@app.post("/retrieval")
 async def query(
-        knowledge_id: str = Form('knowledge_base'),
+        request: Request,
+        knowledge_id: str = Form(None),
         metadata: Optional[str] = Form(None),
         file: Optional[UploadFile] = File(None),
         document: Optional[str] = Form(None),
+        item_id: Optional[str] = Form(None),
+        title: Optional[str] = Form(None),
         query: Optional[str] = Form(None),
         index_config: Optional[str] = Form(None),
         query_config: Optional[str] = Form(None),
         retrieval_setting: Optional[str] = Form(None)
     ):
 
-    file_ext, file_path, filename = save_upload_file(file)
-
-    metadata = parse_json(metadata)
-
-    index_config = parse_json(index_config)
-    query_config = parse_json(query_config)
-    retrieval_setting = parse_json(retrieval_setting)
-
-    query_config.update(retrieval_setting)
-
-    if query is not None:
-        if document is None:
-            document = query
-        else:
-            document = document + query
-
-    # print(query_config)
-    documents = await file_to_documents(document, file_path, index_config)
-
-    # =================================================================
-
-    embeddings = []
-    if documents and len(documents) > 0:
-        # convert each document to embedding
-        for doc in documents:
-            embeddings.append(text_to_embedding(doc))
-
-    # =================================================================
-
-    results = chromadb_query(
+    return await process_query(
+        request,
         knowledge_id,
-        embeddings,
         metadata,
-        query_config
+        file,
+        document,
+        item_id,
+        title,
+        query,
+        index_config,
+        query_config,
+        retrieval_setting
     )
 
-    # =================================================================
-
-    return results
+@app.get("/knowledge_base/{knowledge_id}/{item_id}/")
+async def check_ready(
+        knowledge_id: str, 
+        item_id: str
+    ):
+    return chromadb_ready(knowledge_id, item_id)
