@@ -5,4 +5,7 @@ node_modules
 **/.~lock.*
 **/*.kate-swp
 [[]trash
-**/__pycache__
+**/
+
+app/test
+unstructured/test
