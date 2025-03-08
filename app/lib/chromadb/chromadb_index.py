@@ -1,4 +1,4 @@
-from lib.chromadb.get_collection import get_collection
+from .get_collection import get_collection
 
 def chromadb_index(
     collection_name,

@@ -1,4 +1,4 @@
-import json
+# import json
 
 def filter_by_max_distance(data, max_results):
     documents = data["documents"][0]  # Extract documents

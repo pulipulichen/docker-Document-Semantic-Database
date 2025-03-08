@@ -1,10 +1,11 @@
-from lib.file.file_to_documents import file_to_documents
-from lib.file.file_to_item_id import file_to_item_id
+from .file.file_to_documents import file_to_documents
+from .file.file_to_item_id import file_to_item_id
 
-from lib.chromadb.chromadb_index import chromadb_index
-from lib.embedding.parse_json import parse_json
+from .chromadb.chromadb_index import chromadb_index
+from .chromadb.chromadb_item_delete import chromadb_item_delete
+from .embedding.parse_json import parse_json
 
-from lib.embedding.text_to_embedding import text_to_embedding
+from .embedding.text_to_embedding import text_to_embedding
 
 async def process_index(
         knowledge_id,
@@ -39,6 +40,11 @@ async def process_index(
     # =================================================================
 
     metadata = parse_json(metadata, item_id)
+
+    chromadb_item_delete(
+        knowledge_id,
+        item_id
+    )
 
     chromadb_index(
         knowledge_id,

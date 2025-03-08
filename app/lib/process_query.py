@@ -22,8 +22,12 @@ async def process_query(
     retrieval_setting):
 
     # 讀取 JSON 數據
-    body = await request.json()
-    # print(body)
+    try:
+        body = await request.json()
+        print(body)
+    except Exception as e:
+        print(f"Error parsing JSON: {str(e)}")
+        body = {}
 
     if title is not None and item_id is None:
         item_id = title
@@ -86,7 +90,7 @@ async def process_query(
         query_config
     )
 
-    print(results)
+    # print(results)
 
     # =================================================================
 

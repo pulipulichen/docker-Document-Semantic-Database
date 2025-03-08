@@ -1,10 +1,10 @@
 
-from lib.chromadb.convert_metadata_to_where import convert_metadata_to_where
-from lib.chromadb.filter_by_max_distance import filter_by_max_distance
-from lib.chromadb.get_collection import get_collection
+from .convert_metadata_to_where import convert_metadata_to_where
+from .filter_by_max_distance import filter_by_max_distance
+from .get_collection import get_collection
 import os
 
-from lib.chromadb.external_knowledge_response import external_knowledge_response
+from .external_knowledge_response import external_knowledge_response
 
 
 
@@ -29,9 +29,10 @@ def chromadb_query(
   item_distinct = bool(os.getenv('CHROMADB_QUERY_ITEM_DISTINCT', True))
   if 'item_distinct' in query_config:
     item_distinct = bool(query_config['item_distinct'])
-  item_distinct = False
+  
+  # item_distinct = False
 
-  score_threshold = float(os.getenv('CHROMADB_QUERY_SCORE_THRESHOLD', True))
+  score_threshold = float(os.getenv('CHROMADB_QUERY_SCORE_THRESHOLD', 0.0))
   if 'score_threshold' in query_config:
     score_threshold = float(query_config['score_threshold'])
 

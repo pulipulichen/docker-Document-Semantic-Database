@@ -1,14 +1,14 @@
 
 import sys
-from lib.split_html_table import split_html_table
-from lib.html_table_to_markdown import html_table_to_markdown
+from .split_html_table import split_html_table
+from .html_table_to_markdown import html_table_to_markdown
 
 from markdownify import markdownify as md
 
 import hanzidentifier
 import opencc
 
-from lib.count_token import count_token
+from .count_token import count_token
 import os
 
 converter_s2t = opencc.OpenCC('s2t')  # 簡體轉繁體

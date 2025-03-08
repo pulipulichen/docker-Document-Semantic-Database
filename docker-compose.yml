@@ -20,10 +20,11 @@ services:
     volumes: 
       - ./app/main.py:/app/main.py
       - ./app/lib:/app/lib
-      - ./app/test:/app/test
-      - ./data/uploads:/data/uploads
       - ./data/models:/data/models
-      - ./data/output_segments:/data/output_segments
+      # - ./app/test:/app/test
+      # - ./data/uploads:/data/uploads
+      
+      # - ./data/output_segments:/data/output_segments
 
   chromadb:
     image: chromadb/chroma

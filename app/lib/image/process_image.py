@@ -1,5 +1,5 @@
-from lib.image.is_image import is_image
-from lib.image.vision_describe import vision_describe
+from .is_image import is_image
+from .vision_describe import vision_describe
 
 import os
 
@@ -7,9 +7,9 @@ import uuid
 
 import shutil
 
-from lib.image.sam.init_sam import init_sam
-from lib.image.sam.load_image import load_image
-from lib.image.sam.save_segments import save_segments
+from .sam.init_sam import init_sam
+from .sam.load_image import load_image
+from .sam.save_segments import save_segments
 
 # 設定模型
 OUTPUT_DIR = "/data/output_segments"

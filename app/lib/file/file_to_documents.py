@@ -1,11 +1,11 @@
 
-from lib.file.save_upload_file import save_upload_file
-from lib.image.process_image import process_image
+from .save_upload_file import save_upload_file
+from ..image.process_image import process_image
 
 import requests
 import os
 
-UNSTRUCTURED_API_URL = "http://unstructured:8080/process"
+UNSTRUCTURED_API_ENDPOINT = os.getenv("UNSTRUCTURED_API_ENDPOINT", "http://unstructured:8080/process")
 
 async def file_to_documents(document, file_path, index_config):
    documents = []
@@ -56,7 +56,7 @@ async def file_to_documents(document, file_path, index_config):
          data = {"chunk_config": index_config}
          headers = {"accept": "application/json"}
           
-         response = requests.post(UNSTRUCTURED_API_URL, headers=headers, files=files, data=data)
+         response = requests.post(UNSTRUCTURED_API_ENDPOINT, headers=headers, files=files, data=data)
 
       # print(response.json())
 

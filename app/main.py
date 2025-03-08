@@ -2,6 +2,8 @@ from fastapi import FastAPI, UploadFile, File, Form, Request
 from typing import Optional
 
 from lib.chromadb.chromadb_ready import chromadb_ready
+from lib.chromadb.chromadb_collection_delete import chromadb_collection_delete
+from lib.chromadb.chromadb_item_delete import chromadb_item_delete
 
 from lib.process_index import process_index
 from lib.process_query import process_query
@@ -82,9 +84,23 @@ async def query(
         retrieval_setting
     )
 
-@app.get("/knowledge_base/{knowledge_id}/{item_id}/")
+@app.get("/knowledge_base/{knowledge_id}/item/{item_id}/")
 async def check_ready(
         knowledge_id: str, 
         item_id: str
     ):
     return chromadb_ready(knowledge_id, item_id)
+
+@app.get("/knowledge_base/{knowledge_id}/delete")
+async def delete_collection(
+        knowledge_id: str
+    ):
+    return chromadb_collection_delete(knowledge_id)
+
+
+@app.get("/knowledge_base/{knowledge_id}/item/{item_Id}/delete")
+async def delete_collection(
+        knowledge_id: str, 
+        item_id: str
+    ):
+    return chromadb_item_delete(knowledge_id, item_id)

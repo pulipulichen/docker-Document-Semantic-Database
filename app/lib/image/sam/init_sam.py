@@ -2,7 +2,7 @@ from segment_anything import sam_model_registry, SamAutomaticMaskGenerator
 import torch
 import os
 
-from lib.image.sam.download_checkpoint import download_checkpoint
+from .download_checkpoint import download_checkpoint
 
 MODEL_TYPE = os.getenv("SAM_MODEL_TYPE", "vit_h")
 CHECKPOINT_PATH = os.path.join("/data/models/", os.getenv("SAM_CHECKPOINT_NAME", "sam_vit_h.pth"))

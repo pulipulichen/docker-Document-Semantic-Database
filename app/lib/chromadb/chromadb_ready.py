@@ -1,10 +1,10 @@
 
-from lib.chromadb.convert_metadata_to_where import convert_metadata_to_where
-from lib.chromadb.filter_by_max_distance import filter_by_max_distance
-from lib.chromadb.get_collection import get_collection
+from .convert_metadata_to_where import convert_metadata_to_where
+from .filter_by_max_distance import filter_by_max_distance
+from .get_collection import get_collection
 import os
 
-from lib.chromadb.external_knowledge_response import external_knowledge_response
+from .external_knowledge_response import external_knowledge_response
 
 
 
