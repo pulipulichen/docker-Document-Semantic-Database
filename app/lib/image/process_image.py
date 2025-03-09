@@ -30,6 +30,8 @@ def process_image(file_path, index_config = {}):
   image = load_image(file_path)
   if image.shape[0] > IMAGE_SEGMENT_SIZE_THRESHOLD or image.shape[1] > IMAGE_SEGMENT_SIZE_THRESHOLD:
       mask_generator = init_sam()
+
+      print('Analysing image...')
       masks = mask_generator.generate(image)
       
       segment_images_output_dir = os.path.join(OUTPUT_DIR,uuid.uuid4().hex)

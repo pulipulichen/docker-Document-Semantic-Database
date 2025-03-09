@@ -7,12 +7,16 @@ from .download_checkpoint import download_checkpoint
 MODEL_TYPE = os.getenv("SAM_MODEL_TYPE", "vit_h")
 CHECKPOINT_PATH = os.path.join("/data/models/", os.getenv("SAM_CHECKPOINT_NAME", "sam_vit_h.pth"))
 
+import time
+
 MASK_GENERATOR = None
 # 初始化 Segment Anything 模型
 def init_sam():
     global MASK_GENERATOR
     if MASK_GENERATOR is not None:
         return MASK_GENERATOR
+
+    time.sleep(10)
 
     print('Download checkpoint model...')
     download_checkpoint()

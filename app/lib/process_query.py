@@ -13,6 +13,7 @@ async def process_query(
     knowledge_id,
     metadata,
     file,
+    download_url,
     document,
     item_id,
     title,
@@ -24,7 +25,7 @@ async def process_query(
     # 讀取 JSON 數據
     try:
         body = await request.json()
-        print(body)
+        # print(body)
     except Exception as e:
         print(f"Error parsing JSON: {str(e)}")
         body = {}
@@ -57,17 +58,16 @@ async def process_query(
     retrieval_setting = parse_json(retrieval_setting)
 
     query_config.update(retrieval_setting)
-
-    if query is not None:
-        if document is None:
-            document = query
-        else:
-            document = document + query
-
+    
     # print(query_config)
+
     documents = await file_to_documents(document, file_path, index_config)
 
+    if query is not None:
+        documents.append(query)
+
     # print(documents)
+        
     if len(documents) == 0:
         return {
             "records": []

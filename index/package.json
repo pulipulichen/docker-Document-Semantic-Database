@@ -1,0 +1,15 @@
+{
+  "name": "node-docker-proxy",
+  "version": "1.0.0",
+  "description": "A Node.js server to forward requests to http://app:8000/index",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "axios": "^1.6.0",
+    "express": "^4.18.2",
+    "form-data": "^4.0.0",
+    "multer": "^1.4.5-lts.1"
+  }
+}

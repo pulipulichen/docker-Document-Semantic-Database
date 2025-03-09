@@ -1,6 +1,8 @@
 # import json
 
 def filter_by_min_distance(data, max_results):
+    # print(max_results)
+
     documents = data["documents"][0]  # Extract documents
     metadatas = data["metadatas"][0]  # Extract metadatas
     distances = data["distances"][0]  # Extract distances

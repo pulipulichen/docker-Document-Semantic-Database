@@ -7,6 +7,8 @@ from .embedding.parse_json import parse_json
 
 from .embedding.text_to_embedding import text_to_embedding
 
+import time
+
 async def process_index(
         knowledge_id,
         item_id,
@@ -16,7 +18,12 @@ async def process_index(
         document,
         index_config
 ):
+    print(item_id, file_path, filename)
+    
+    # ======================
+    # 讀取 JSON 數據
 
+    # ======================
 
     index_config = parse_json(index_config)
 

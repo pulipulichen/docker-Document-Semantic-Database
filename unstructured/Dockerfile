@@ -9,6 +9,8 @@ RUN pip install --no-cache-dir -r requirements.txt
 ENV UVICORN_WORKERS=8
 
 # CMD ["uvicorn", "app:app", "--host", "0.0.0.0", "--port", "8080", "--reload"]
-CMD ["uvicorn", "app:app", "--host", "0.0.0.0", "--port", "8000", "--workers", "${UVICORN_WORKERS}"]
+# CMD ["uvicorn", "app:app", "--host", "0.0.0.0", "--port", "8000", "--workers", "${UVICORN_WORKERS}"]
+COPY entrypoint.sh /app/entrypoint.sh
+CMD ["bash", "entrypoint.sh"]
 
 COPY app.py /app/app.py

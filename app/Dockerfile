@@ -15,5 +15,7 @@ ENV UVICORN_WORKERS=8
 
 # 啟動 FastAPI 伺服器
 # CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8000", "--reload"]
-CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8000", "--workers", "${UVICORN_WORKERS}"]
+# CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8000", "--workers", "${UVICORN_WORKERS}"]
+COPY app/entrypoint.sh /app/entrypoint.sh
+CMD ["bash", "/app/entrypoint.sh"]
 # CMD ["python3", "ollama_vision.py"]

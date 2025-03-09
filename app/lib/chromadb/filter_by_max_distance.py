@@ -12,7 +12,7 @@ def filter_by_max_distance(data, max_results):
         item_id = metadata.get("item_id", None)  # Get item_id or None if not present
         if item_id:
             # Keep the entry with the smallest distance
-            if item_id not in max_distance_map or distances[i] > max_distance_map[item_id][1]:
+            if item_id not in max_distance_map or distances[i] < max_distance_map[item_id][1]:
                 max_distance_map[item_id] = (i, distances[i])
 
     # Indices to keep
