@@ -11,7 +11,7 @@
 echo "傳送第一個"
 
 curl -X 'POST' \
-  'http://localhost:8889/index' \
+  'http://192.168.100.210:8000/index' \
   -H 'accept: application/json' \
   -H 'Content-Type: multipart/form-data' \
   -F 'document=abc' \
@@ -20,7 +20,7 @@ curl -X 'POST' \
 echo "傳送第二個"
 
 curl -X 'POST' \
-  'http://localhost:8889/index' \
+  'http://192.168.100.210:8000/index' \
   -H 'accept: application/json' \
   -H 'Content-Type: multipart/form-data' \
   -F 'document=def' \
@@ -29,7 +29,7 @@ curl -X 'POST' \
 echo "傳送第三個"
 
 curl -X 'POST' \
-  'http://localhost:8889/index' \
+  'http://192.168.100.210:8000/index' \
   -H 'accept: application/json' \
   -H 'Content-Type: multipart/form-data' \
   -F 'title=測試A' \
@@ -38,7 +38,7 @@ curl -X 'POST' \
 echo "傳送第四個"
 
 curl -X 'POST' \
-  'http://localhost:8889/index' \
+  'http://192.168.100.210:8000/index' \
   -H 'accept: application/json' \
   -H 'Content-Type: multipart/form-data' \
   -F 'title=測試B' \
@@ -47,7 +47,7 @@ curl -X 'POST' \
 echo "傳送第五個"
 
 curl -X 'POST' \
-  'http://192.168.89.1:8889/index' \
+  'http://192.168.100.210:8000/index' \
   -H 'accept: application/json' \
   -H 'Content-Type: multipart/form-data' \
   -F 'title=1a_test' \
