@@ -4,6 +4,9 @@ import os
 
 from .download_checkpoint import download_checkpoint
 
+print('Download checkpoint model...')
+download_checkpoint()
+
 MODEL_TYPE = os.getenv("SAM_MODEL_TYPE", "vit_h")
 CHECKPOINT_PATH = os.path.join("/data/models/", os.getenv("SAM_CHECKPOINT_NAME", "sam_vit_h.pth"))
 
@@ -18,8 +21,6 @@ def init_sam():
 
     time.sleep(10)
 
-    print('Download checkpoint model...')
-    download_checkpoint()
 
     print('Load the model...')
     sam = sam_model_registry[MODEL_TYPE](checkpoint=CHECKPOINT_PATH)
